@@ -1,24 +1,53 @@
 <!DOCTYPE html>
 
 <html>
-text here here
+<h4>Pong Game<h4>
 <canvas id="gameCanvas" width="800" height="600"></canvas>
 
 <script>
 var canvas;
 var canvasContext;
+var ballX = 50;
+var ballSpeedX = 15;
 
 window.onload = function() {
-	console.log("ehllo world");
 	canvas = document.getElementById('gameCanvas');
 	canvasContext = canvas.getContext('2d');
+	
+	var framesPerSecond = 30;
+
+	setInterval(function() {
+		moveEverything();
+		drawEverything();
+	}, 1000/framesPerSecond);
+
+}
+
+
+function moveEverything() {
+	ballX = ballX + ballSpeedX;
+	//check if ball reaches edge of right hand screen
+	if(ballX < 0) {
+		ballSpeedX = -ballSpeedX
+	}
+	if(ballX > canvas.width) {
+		ballSpeedX = -ballSpeedX;
+	}
+
+
+}
+
+function drawEverything() {
+
 	canvasContext.fillStyle = 'black';
 	canvasContext.fillRect(0,0,canvas.width, canvas.height);
+	canvasContext.fillStyle = 'white';
+	canvasContext.fillRect(10,300,10,100);
 	canvasContext.fillStyle = 'red';
-	canvasContext.fillRect(200,200,50,25);
-	canvasContext.fillStyle = 'green';
-	canvasContext.fillRect(230,230,10,10);
+	canvasContext.fillRect(ballX,100,10,10);
+
 }
+
 </script>
 
 </html>
