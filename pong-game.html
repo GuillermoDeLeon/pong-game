@@ -13,7 +13,9 @@ var ballSpeedX = 10;
 var ballSpeedY = 4
 
 var paddle1Y = 250;
+var paddle2Y = 250;
 const PADDLE_HEIGHT = 100;
+const PADDLE_THICKNESS = 10;
 
 //find mouse position
 function calculateMousePos(evt) {
@@ -38,6 +40,7 @@ window.onload = function() {
 		drawEverything();
 	}, 1000/framesPerSecond);
 
+//event listener that moves paddle vertically with mouse position
 	canvas.addEventListener('mousemove',
 		function(evt) {
 			var mousePos = calculateMousePos(evt);
@@ -46,19 +49,34 @@ window.onload = function() {
 
 }
 
+//ball reset
+function ballReset() {
+	ballSpeedX = -ballSpeedX;
+	ballX = canvas.width/2;
+	ballY = canvas.height/2;
+}
+
 
 function moveEverything() {
 	ballX = ballX + ballSpeedX;
 	ballY = ballY + ballSpeedY;
-	//checks ball to bounce from left and right side of screen
+	//checks ball to bounce from left side of screen where paddle is located
 	if(ballX < 0) {
-		ballSpeedX = -ballSpeedX;
+		if(ballY > paddle1Y && ballY < paddle1Y+PADDLE_HEIGHT) {
+			ballSpeedX = -ballSpeedX;
+		} else {
+		ballReset();
+		}
 	}
 	if(ballX > canvas.width) {
-		ballSpeedX = -ballSpeedX;
+		if(ballY > paddle2Y && ballY < paddle2Y+PADDLE_HEIGHT) {
+			ballSpeedX = -ballSpeedX;
+		} else {
+			ballReset();
+		}
 	}
 
-	//this checks and bounces off top and bottom of screen
+	//this checks and bounces ball off top and bottom of screen
 	if(ballY < 0) {
 		ballSpeedY = -ballSpeedY;
 	}
@@ -71,10 +89,13 @@ function moveEverything() {
 function drawEverything() {
 
 	//makes background black
-	colorRect(0, 0, canvas.width, canvas.height, 'black');
+	colorRect(0, 0, canvas.width, canvas.height, 'green');
 
 	//left player paddle
-	colorRect(10,paddle1Y,10,100, 'white');
+	colorRect(10,paddle1Y,PADDLE_THICKNESS,PADDLE_HEIGHT, 'white');
+
+	//right player paddle
+	colorRect((canvas.width-20),paddle2Y,PADDLE_THICKNESS,PADDLE_HEIGHT,'white')
 
 	//draw pong ball
 	colorCircle(ballX, ballY, 10, 'white');
