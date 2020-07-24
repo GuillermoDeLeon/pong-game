@@ -56,8 +56,21 @@ function ballReset() {
 	ballY = canvas.height/2;
 }
 
+//right paddle AI movment
+function computerMovement() {
+	var paddle2YCenter = paddle2Y + (PADDLE_HEIGHT/2);
+
+	if(paddle2YCenter < ballY) {
+		paddle2Y = paddle2Y + 6;
+	} else {
+		paddle2Y = paddle2Y - 6;
+	}
+}
+
 
 function moveEverything() {
+	computerMovement();
+
 	ballX = ballX + ballSpeedX;
 	ballY = ballY + ballSpeedY;
 	//checks ball to bounce from left side of screen where paddle is located
