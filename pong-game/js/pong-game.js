@@ -29,6 +29,14 @@ function calculateMousePos(evt) {
 	};
 }
 
+function handleMouseClick(evt) {
+	if(showWinScreen) {
+		player1Score = 0;
+		player2Score = 0;
+		showWinScreen = false;
+	}
+}
+
 window.onload = function() {
 	canvas = document.getElementById('gameCanvas');
 	canvasContext = canvas.getContext('2d');
@@ -39,6 +47,8 @@ window.onload = function() {
 		moveEverything();
 		drawEverything();
 	}, 1000/framesPerSecond);
+
+	canvas.addEventListener('mousedown', handleMouseClick);
 
 //event listener that moves paddle vertically with mouse position
 	canvas.addEventListener('mousemove',
@@ -52,8 +62,8 @@ window.onload = function() {
 //ball reset
 function ballReset() {
 	if(player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE) {
-		player1Score = 0;
-		player2Score = 0;
+		// player1Score = 0;
+		// player2Score = 0;
 		showWinScreen = true;
 	}
 
@@ -100,7 +110,7 @@ function moveEverything() {
 
 	//checks ball to bounce from right side of screen where paddle for player 2 is located
 	if(ballX > canvas.width) {
-		if(ballY > paddle2Y && ballY < paddle2Y+PADDLE_HEIGHT) {
+		if(ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
 			ballSpeedX = -ballSpeedX;
 
 			var deltaY = ballY - (paddle2Y + PADDLE_HEIGHT/2);
@@ -122,22 +132,35 @@ function moveEverything() {
 
 }
 
+function drawNet() {
+	for(var i=0; i < canvas.height; i+=40) {
+		colorRect(canvas.width/2 - 1, i, 2, 20, 'white');
+	}
+}
+
 function drawEverything() {
 
 	//makes background green
 	colorRect(0, 0, canvas.width, canvas.height, 'green');
 
+	//Display which payer won after max score is reached
 	if(showWinScreen){
 		canvasContext.fillStyle = 'white';
-		canvasContext.fillText("click to continue", 100, 100);
-		return;
+
+		if(player1Score >= WINNING_SCORE) {
+			canvasContext.fillText("Left Player Won!", 350, 200);
+		} else if(player2Score >= WINNING_SCORE) {
+			canvasContext.fillText("Right Player Won!", 350, 200);
+			}
 	}
 
+	drawNet();
+
 	//left player paddle
-	colorRect(10,paddle1Y,PADDLE_THICKNESS,PADDLE_HEIGHT, 'white');
+	colorRect(0,paddle1Y,PADDLE_THICKNESS,PADDLE_HEIGHT, 'white');
 
 	//right player paddle
-	colorRect((canvas.width-20),paddle2Y,PADDLE_THICKNESS,PADDLE_HEIGHT,'white')
+	colorRect((canvas.width-10),paddle2Y,PADDLE_THICKNESS,PADDLE_HEIGHT,'white')
 
 	//draw pong ball
 	colorCircle(ballX, ballY, 10, 'white');
